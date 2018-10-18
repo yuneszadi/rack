@@ -1,20 +1,23 @@
 class Date
 
+  FORMAT_LIST = [ 'year', 'month', 'day', 'hour', 'minute', 'second' ]
+  FORMAT_CONVERSION = { 'year' => '%Y', 'month' => '%m', 'day' => '%d',
+                        'hour' => '%H', 'minute' => '%M', 'second' => '%S' }
+
   def initialize(format)
-    @format_list = [year, month, day, hour, minute, second]
-    @format_conversion = { 'year' => '%Y', 'month' => '%m', 'day' => '%d',
-                          'hour' => '%H', 'minute' => '%M', 'second' => '%S' }
     @format = format
-    @new_format = ''
   end
 
   def result
-    @query.split(':').each { |elem| @new_format += "#{  @format_conversion[elem] }" }
+    @new_format = @format.split(':').reduce('') do |sum, elem|
+      sum << "#{ FORMAT_CONVERSION[elem] }"
+    end
+
     Time.now.strftime(@new_format)
   end
 
   def result_success?
-    errors = @query.split(':').reject { |elem| @format_list.include?(elem) }
+    errors = @format.split(':').reject { |elem| FORMAT_LIST.include?(elem) }
     errors.empty?
   end
 

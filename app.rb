@@ -4,7 +4,7 @@ class App
     request = Rack::Request.new(env)
 
     if request.path_info == '/time'
-      formatter = DateFormatter.new(request[:format])
+      @formatter = DateFormatter.new(request[:format])
       check_result
     else
       unknown_url(request.path_info)
@@ -14,10 +14,10 @@ class App
   private
 
   def check_result
-    if formatter.result_success?
-      time_response(formatter)
+    if @formatter.result_success?
+      time_response(@formatter)
     else
-      unknown_format(formatter.errors)
+      unknown_format(@formatter.errors)
     end
   end
 
